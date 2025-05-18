@@ -1,5 +1,6 @@
 #include "RouteAPI.h"
 
+#include <iomanip>
 #include <iostream>
 
 #include <nlohmann/json.hpp>
@@ -27,7 +28,8 @@ std::string RouteAPI::FetchRouteJSON(const std::string& departure_yandex_code, c
                              "&from=" + departure_yandex_code +
                              "&to=" + destination_yandex_code +
                              "&format=json" +
-                             "&date=" + date_str;
+                             "&date=" + date_str +
+                             "&transfers=true";
 
      cpr::Response r = cpr::Get(cpr::Url{url});
 

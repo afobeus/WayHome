@@ -1,4 +1,9 @@
-add_library(RouteSearcher RouteAPI.cpp RouteSearcher.cpp)
+add_library(RouteSearcher
+        RouteService.cpp
+        RouteCLIController.cpp
+        api/RouteAPI.cpp
+        core/Route.cpp
+        core/RouteFactory.cpp)
 
 include(FetchContent)
 
