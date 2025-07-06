@@ -3,18 +3,15 @@
 #include <iomanip>
 #include <iostream>
 
-#include <nlohmann/json.hpp>
 #include <cpr/cpr.h>
 
-using json = nlohmann::json;
-
-std::string RouteAPI::FetchRouteJSON(const std::string& departure_yandex_code, const std::string& destination_yandex_code,
+json RouteAPI::FetchRouteJSON(const std::string& departure_yandex_code, const std::string& destination_yandex_code,
                                  const std::chrono::year_month_day& date) {
 
      const char* api_key = std::getenv("YANDEX_API_KEY");
      if (!api_key) {
          std::cerr << "Environment variable YANDEX_API_KEY is not set.\n";
-         return "";
+         return {};
      }
 
      std::ostringstream oss;
@@ -35,14 +32,14 @@ std::string RouteAPI::FetchRouteJSON(const std::string& departure_yandex_code, c
 
      if (r.status_code != 200) {
          std::cerr << "Bad status code: " << r.status_code << "\n";
-         return "";
+         return {};
      }
 
      auto result = json::parse(r.text, nullptr, false);
      if (result.is_discarded()) {
          std::cerr << "Invalid JSON was fetched.\n";
-         return "";
+         return {};
      }
 
-     return r.text;
+     return result;
  }
