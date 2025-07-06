@@ -1,9 +1,10 @@
 add_library(RouteSearcher
-        RouteService.cpp
-        RouteCLIController.cpp
+        core/RouteService.cpp
+        cli/RouteCLIController.cpp
         api/RouteAPI.cpp
         core/Route.cpp
-        core/RouteFactory.cpp)
+        core/RouteFactory.cpp
+        util/ChronoConversion.cpp)
 
 include(FetchContent)
 
