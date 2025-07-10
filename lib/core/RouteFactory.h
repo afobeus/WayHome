@@ -11,4 +11,4 @@ using json = nlohmann::json;
 
 bool IsValidJSON(const json& routes_json);
 
-std::vector<std::unique_ptr<BaseRoute>> MakeRoutes(const json& routes_json);
+std::vector<std::unique_ptr<IRoute>> MakeRoutes(const json& routes_json);
