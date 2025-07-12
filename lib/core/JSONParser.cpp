@@ -1,6 +1,7 @@
-#include "RouteFactory.h"
+#include "JSONParser.h"
 
 #include "../util/ChronoConversion.h"
+#include "../util/StringComparison.h"
 
 inline std::string GetTitle(const json& route_json) { // TODO: study something about inline and also deside whether it is necessary here or not
     return route_json["popular_title"].is_null() or route_json["popular_title"] == "" ? route_json["title"] : route_json["popular_title"];
@@ -78,4 +79,18 @@ std::vector<std::unique_ptr<IRoute>> MakeRoutes(const json& routes_json) {
     }
 
     return routes;
+}
+
+std::vector<std::pair<std::string, std::string>> GetCitiesCodes(const json& routes_json) {
+    std::vector<std::pair<std::string, std::string>> cities_codes;
+    for (const auto& country : routes_json["countries"]) {
+        for (const auto& region : country["regions"]) {
+            for (const auto&  city : region["settlements"]) {
+                if (city["title"] != "") {
+                    cities_codes.emplace_back(NormalizeString(city["title"]), city["codes"]["yandex_code"]);
+                }
+            }
+        }
+    }
+    return cities_codes;
 }
