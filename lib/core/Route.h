@@ -28,11 +28,11 @@ enum class TransportType {
 };
 
 const std::map<std::string, TransportType> string_to_transport_type {
-        {"plane", TransportType::Plane},
-        {"train", TransportType::Train},
-        {"suburban", TransportType::Suburban},
-        {"bus", TransportType::Plane},
-        {"water", TransportType::Water},
+        {"plane",      TransportType::Plane},
+        {"train",      TransportType::Train},
+        {"suburban",   TransportType::Suburban},
+        {"bus",        TransportType::Bus},
+        {"water",      TransportType::Water},
         {"helicopter", TransportType::Helicopter},
 };
 
