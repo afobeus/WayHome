@@ -6,18 +6,22 @@
 #include "JSONParser.h"
 #include "../util/StringComparison.h"
 
-void PrintRoutes(const std::string& departure_yandex_code, const std::string& destination_yandex_code,
+void PrintRoutes(const std::string& departure_city_user_title, const std::string& destination_city_user_title,
                  const std::chrono::year_month_day date) {
 
     RouteAPI api_object;
+    const std::pair<std::string, std::string> city_codes = GetCityCodes(departure_city_user_title, destination_city_user_title);
     // std::cout << api_object.FetchRouteJSON(departure_yandex_code, destination_yandex_code, date) << std::endl; // TODO delete
-    const auto api_response_json = api_object.FetchRouteJSON(departure_yandex_code, destination_yandex_code, date);
+    const auto api_response_json = api_object.FetchRouteJSON(city_codes.first,
+        city_codes.second, date);
     const auto routes = MakeRoutes(api_response_json);
     if (routes.empty()) {
         std::cout << "Не было найдено ни одного маршрута!";
         return;
     }
-    std::cout << "Найдено " << routes.size() << " маршрутов\n";
+
+    //std::string departure_city_title = dynamic_cast<TransferRoute*>(routes[0]); // TODO add real city titles that were found
+    std::cout << "Найдено " << routes.size() << " маршрутов " << departure_city_user_title << " - " << destination_city_user_title << ":\n";
     for (int i = 0; i < routes.size(); ++i) {
         std::cout << i + 1 << ')' << routes[i]->GetInfo() << '\n';
     }
@@ -31,3 +35,4 @@ std::pair<std::string, std::string> GetCityCodes(const std::string& departure_ci
     std::string arrival_city_code = FindClosest(cities_codes, NormalizeString(arrival_city_title)).second;
     return {departure_city_code, arrival_city_code};
 }
+
