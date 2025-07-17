@@ -3,7 +3,9 @@
 #include <vector>
 #include <string>
 
+#include "../core/Route.h"
+
 std::string NormalizeString(const std::string& input);
 
-std::pair<std::string, std::string> FindClosest(const std::vector<std::pair<std::string, std::string>>& candidate_strings,
+CityCode FindClosest(const std::vector<CityCode>& candidate_strings,
     const std::string& target_string);

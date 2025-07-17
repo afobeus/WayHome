@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include "../core/Route.h"
+
 std::vector<std::string> utf8_chars(const std::string& str) {
     std::vector<std::string> chars;
     for (size_t i = 0; i < str.size(); ) {
@@ -138,11 +140,11 @@ std::string NormalizeString(const std::string& input) {
     return output;
 }
 
-std::vector<std::pair<std::string, std::string>> GetTop10ByLCS(const std::vector<std::pair<std::string, std::string>>& candidate_strings, const std::string& target_string) {
-    std::vector<std::pair<std::pair<std::string, std::string>, size_t>> scored;
+std::vector<CityCode> GetTop10ByLCS(const std::vector<CityCode>& candidate_strings, const std::string& target_string) {
+    std::vector<std::pair<CityCode, size_t>> scored;
 
-    for (const std::pair<std::string, std::string>& s : candidate_strings) {
-        scored.emplace_back(s, LCS(target_string, s.first));
+    for (const CityCode& s : candidate_strings) {
+        scored.emplace_back(s, LCS(target_string, s.city_title));
     }
 
     std::sort(scored.begin(), scored.end(),
@@ -150,23 +152,22 @@ std::vector<std::pair<std::string, std::string>> GetTop10ByLCS(const std::vector
                   return str1.second > str2.second;
               });
 
-    std::vector<std::pair<std::string, std::string>> result;
+    std::vector<CityCode> result;
     for (size_t i = 0; i < std::min(10UZ, scored.size()); ++i)
         result.push_back(scored[i].first);
 
     return result;
 }
 
-std::pair<std::string, std::string> FindClosest(const std::vector<std::pair<std::string, std::string>>& candidate_strings,
+CityCode FindClosest(const std::vector<CityCode>& candidate_strings,
     const std::string& target_string) {
     // TODO maybe upgrade with normalized Levenshtein Distance and 1.5 for insertion and delete
-    // TODO make some structs instead of std::pair<std::string, std::string>. pair is too unobvious
-    const std::vector<std::pair<std::string, std::string>> top10 = GetTop10ByLCS(candidate_strings, target_string);
-    std::pair<std::string, std::string> best_match;
+    const std::vector<CityCode> top10 = GetTop10ByLCS(candidate_strings, target_string);
+    CityCode best_match;
     size_t least_difference;
-    for (const std::pair<std::string, std::string>& str : top10) {
-        const size_t difference = LevenshteinDistance(target_string, str.first);
-        if (best_match.first.empty() or difference < least_difference) {
+    for (const CityCode& str : top10) {
+        const size_t difference = LevenshteinDistance(target_string, str.city_title);
+        if (best_match.city_title.empty() or difference < least_difference) {
             least_difference = difference;
             best_match = str;
         }

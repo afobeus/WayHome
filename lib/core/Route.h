@@ -7,6 +7,10 @@
 #include <vector>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
+
 enum class Currency {
     RUB,
     Unknown
@@ -37,6 +41,16 @@ const std::map<std::string, TransportType> string_to_transport_type {
 };
 
 const std::map<TransportType, std::string> transport_type_to_string {
+            {TransportType::Plane,      "plane"},
+            {TransportType::Train,      "train"},
+            {TransportType::Suburban,   "suburban"},
+            {TransportType::Bus,        "bus"},
+            {TransportType::Water,      "water"},
+            {TransportType::Helicopter, "helicopter"},
+    };
+
+
+const std::map<TransportType, std::string> transport_type_to_phrase {
         {TransportType::Plane,      "Полёт на самолёте"},
         {TransportType::Train,      "Поездка на поезде"},
         {TransportType::Suburban,   "Поездка на электричке"},
@@ -45,9 +59,15 @@ const std::map<TransportType, std::string> transport_type_to_string {
         {TransportType::Helicopter, "Полёт на вертолёте"}
 };
 
+struct CityCode {
+    std::string city_title;
+    std::string code;
+};
+
 struct IRoute {
     virtual ~IRoute() = default;
     virtual std::string GetInfo() const = 0;
+    virtual void Serialize(json& routes_array) const = 0;
 };
 
 struct BaseRoute {
@@ -66,6 +86,7 @@ struct DirectRoute final : IRoute, BaseRoute {
                 std::time_t arrival_datetime, const std::string& from_station_title, const std::string& to_station_title,
                 TransportType transport_type, const std::optional<RoutePrice>& price=std::nullopt);
     std::string GetInfo() const override;
+    void Serialize(json& routes_array) const override;
 
     std::string from_station_title;
     std::string to_station_title;
@@ -92,9 +113,10 @@ struct Segment {
 };
 
 struct TransferRoute final : IRoute, BaseRoute {
-    std::string GetInfo() const override;
     TransferRoute(const std::string& from_city_title, const std::string& to_city_title, std::time_t departure_datetime,
                   std::time_t arrival_datetime);
+    std::string GetInfo() const override;
+    void Serialize(json& routes_array) const override;
     void AddSegment(const Segment& segment);
 
     std::vector<Segment> segments;

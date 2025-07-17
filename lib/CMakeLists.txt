@@ -1,11 +1,12 @@
 add_library(RouteSearcher
-        util/ChronoConversion.cpp
+        util/DateTimeTools.cpp
         util/StringComparison.cpp
         api/RouteAPI.cpp
         cli/RouteCLIController.cpp
         core/RouteService.cpp
         core/Route.cpp
-        core/JSONParser.cpp)
+        core/JSONParser.cpp
+        core/CacheManager.cpp)
 
 include(FetchContent)
 

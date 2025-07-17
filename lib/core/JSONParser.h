@@ -13,4 +13,4 @@ bool IsValidJSON(const json& routes_json);
 
 std::vector<std::unique_ptr<IRoute>> MakeRoutes(const json& routes_json);
 
-std::vector<std::pair<std::string, std::string>> GetCitiesCodes(const json& routes_json);
+std::vector<CityCode> MakeCitiesCodes(const json& routes_json);
